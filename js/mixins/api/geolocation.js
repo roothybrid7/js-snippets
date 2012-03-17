@@ -30,4 +30,6 @@
       return deferred.promise();
     }
   };
+
+  return mixins.GeoLocation;
 }(this));
