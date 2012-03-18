@@ -8,7 +8,7 @@
   /**
    * namespace
    */
-  var config = {rootNs: 'App'};
+  var config = appConfig || {rootNs: 'App'};
   global[config.rootNs] = global[config.rootNs] || {};
 
   var app = global[config.rootNs];
@@ -21,7 +21,7 @@
   };
 
   /**
-   * Creates and returns mhh namespace.
+   * Creates and returns application namespace.
    *
    * Examples:
    *
