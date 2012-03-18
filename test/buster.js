@@ -15,14 +15,16 @@ config['Browser tests'] = {
     'js/config.js',
     'js/module.js',
     'js/mixins/core.js',
-    'js/mixins/mvc/utils.js'
+    'js/mixins/mvc/utils.js',
+    'js/mixins/mvc/views.js'
   ],
   tests: [
     'test/strftime-test.js',
     'test/config-test.js',
     'test/module-test.js',
     'test/mixins-core-test.js',
-    'test/mixins-utils-test.js'
+    'test/mixins-utils-test.js',
+    'test/mixins-views-test.js'
   ]
 };
 
