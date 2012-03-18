@@ -13,12 +13,14 @@ config['Browser tests'] = {
   sources: [
     'test/strftime.js',
     'js/config.js',
-    'js/module.js'
+    'js/module.js',
+    'js/mixins/core.js'
   ],
   tests: [
     'test/strftime-test.js',
     'test/config-test.js',
-    'test/module-test.js'
+    'test/module-test.js',
+    'test/mixins-core-test.js'
   ]
 };
 
