@@ -32,6 +32,26 @@ buster.testCase("Mixins utils tests", {
       var expected = obj.executeCommands;
       assert.isFunction(expected);
     },
+    'should not execute function': function() {
+      var obj = new this.Klass();
+      _.extend(obj, this.mixinsUtils.Core);
+      obj.executeCommands(['']);
+      refute.defined(obj.executedA);
+      refute.defined(obj.executedB);
+      refute.defined(obj.executedC);
+      obj.executeCommands();
+      refute.defined(obj.executedA);
+      refute.defined(obj.executedB);
+      refute.defined(obj.executedC);
+      obj.executeCommands([null]);
+      refute.defined(obj.executedA);
+      refute.defined(obj.executedB);
+      refute.defined(obj.executedC);
+      obj.executeCommands([undefined]);
+      refute.defined(obj.executedA);
+      refute.defined(obj.executedB);
+      refute.defined(obj.executedC);
+    },
     'should execute functions': function() {
       var obj = new this.Klass();
       _.extend(obj, this.mixinsUtils.Core);

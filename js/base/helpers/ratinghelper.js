@@ -19,6 +19,7 @@
   var rootNs = global.getRootNamespace();
   var helpers = rootNs.namespace('base.helpers');
 
+  // TODO: 定数をやめる
   var RATING_CLASS_PREFIX = 'rating';
   /**
    * Returns a rating css.

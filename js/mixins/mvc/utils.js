@@ -26,7 +26,7 @@
    */
   mixins.Core = {
     executeCommands: function(fnList) {
-      _.each(fnList, function(fn) {
+      _.chain(fnList).compact().each(function(fn) {
         this[fn].apply(this);
       }, this);
     }
