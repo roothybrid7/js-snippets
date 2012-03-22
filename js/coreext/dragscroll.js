@@ -5,6 +5,8 @@
  */
 
 (function($) {
+  'use strict';
+
   $.fn.extend({
     dragScroll: function() {
       var target = null;
@@ -24,7 +26,7 @@
         }
 
         $(target)
-          .data('down', true)
+          .data('dragging', true)
           .data('x', x)
           .data('y', y)
           .data('scrollLeft', $(target).scrollLeft())
@@ -34,7 +36,7 @@
       });
 
       $(document).on('touchmove mousemove', function(e) {
-        if ($(target).data('down') === true) {
+        if ($(target).data('dragging') === true) {
           var x, y, touches = e.originalEvent.changedTouches;
           if (touches) {
             x = touches[0].pageX;
