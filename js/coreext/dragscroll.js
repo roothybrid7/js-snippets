@@ -31,8 +31,6 @@
           .data('y', y)
           .data('scrollLeft', $(target).scrollLeft())
           .data('scrollTop', $(target).scrollTop());
-
-        return false;
       });
 
       $(document).on('touchmove mousemove', function(e) {

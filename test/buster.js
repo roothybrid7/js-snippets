@@ -12,7 +12,7 @@ config['Browser tests'] = {
   ],
   sources: [
     'test/strftime.js',
-    'js/config.js',
+//    'js/config.js',
     'js/module.js',
     'js/mixins/core.js',
     'js/mixins/mvc/utils.js',
@@ -20,7 +20,7 @@ config['Browser tests'] = {
   ],
   tests: [
     'test/strftime-test.js',
-    'test/config-test.js',
+//    'test/config-test.js',
     'test/module-test.js',
     'test/mixins-core-test.js',
     'test/mixins-utils-test.js',

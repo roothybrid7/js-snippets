@@ -18,8 +18,8 @@
   // Backbone.Model for application.
   base.App = Backbone.Model.extend({
     // Get date for view(default attribute: 'date'). Override if necessary.
-    getDateForView: function() {
-      return this.get('date') || '000000000000';
+    getDateForView: function(key) {
+      return this.get(key || 'date') || '000000000000';
     },
     getDateFromTimestamp: function() {
       return helpers.getDateFromTimestamp(this.getDateForView());
