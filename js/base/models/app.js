@@ -21,8 +21,8 @@
     getDateForView: function(key) {
       return this.get(key || 'date') || '000000000000';
     },
-    getDateFromTimestamp: function() {
-      return helpers.getDateFromTimestamp(this.getDateForView());
+    getDateFromTimestamp: function(key) {
+      return helpers.getDateFromTimestamp(this.getDateForView(key));
     }
   });
 
