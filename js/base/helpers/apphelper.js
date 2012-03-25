@@ -121,6 +121,27 @@
   };
 
   /**
+   * Create paragraph in array.
+   *
+   * @param {Array.<string>} model A backbone model.
+   * @param {string=} defaults A default paragraph.
+   * @return {string} Created paragraph.
+   */
+  helpers.createParagraphInArray = function(array, defaults) {
+    var paragraph = '', strArr = [];
+    _.each(array, function(item) {
+      strArr.push(item);
+    });
+    strArr = _.compact(strArr);
+    if (strArr.length === 0) {
+      paragraph = defaults + '.';
+    } else {
+      paragraph = strArr.join('. ') + '.';
+    }
+    return paragraph;
+  };
+
+  /**
    * Returns pathname from url.
    *
    * @param {string} url url string.
