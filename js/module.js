@@ -8,7 +8,7 @@
   /**
    * namespace
    */
-  var config = appConfig || {rootNs: 'App'};
+  var config = global.appConfig || {rootNs: 'App'};
   global[config.rootNs] = global[config.rootNs] || {};
 
   var app = global[config.rootNs];

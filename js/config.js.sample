@@ -6,6 +6,7 @@
  * @type {Object}
  */
 var appConfig = {};
+global.appConfig = appConfig;
 
 (function(global) {
   'use strict';
