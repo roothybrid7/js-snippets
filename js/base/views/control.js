@@ -1,38 +1,39 @@
 /**
  * control.js - view base.
+ *
+ * requries: jQuery, Backbone.js, underscore.js, mixins.mvc.views.
  */
 
 /**
  * Immediate function for initializing views.
  *
  * @param {window} global window object.
- * @param {Object} options Option parameters.
  */
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace
    */
   var rootNs = global.getRootNamespace();
-  var base = rootNs.namespace('base.views');
+  var module = rootNs.namespace('mvc.base.views');
 
   var viewMixins = rootNs.namespace('mixins.mvc.views');
 
   /**
    * Link control.
    */
-  base.Link = base.App.extend();
+  module.Link = module.App.extend();
 
   /**
    * Button trigger: enabled, disabled.
    */
-  base.Button = base.App.extend(_.extend({}, viewMixins.ButtonState));
+  module.Button = module.App.extend(_.extend({}, viewMixins.ButtonState));
 
   /**
    * Home Logo
    */
-  base.HomeLogo = base.Link.extend({
+  module.HomeLogo = module.Link.extend({
     events: {
       'click': 'backToHome'
     },
@@ -45,4 +46,6 @@
       return false;
     }
   });
+
+  return module;
 }(this));

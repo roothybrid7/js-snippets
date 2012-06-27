@@ -1,25 +1,24 @@
 /**
  * app.js - Application backbone base view.
  *
- * requires: jQuery, Backbone, _(underscore.js).
+ * requires: jQuery, Backbone, _(underscore.js), viewMixins, helpers.
  */
 
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace.
    */
   var rootNs = global.getRootNamespace();
-  var base = rootNs.namespace('base.views');
+  var module = rootNs.namespace('mvc.base.views');
 
   var viewMixins = rootNs.namespace('mixins.mvc.views');
-  var utilMixins = rootNs.namespace('mixins.mvc.utils');
-  var helpers = rootNs.namespace('base.helpers');
+  var helpers = rootNs.namespace('mvc.helpers');
 
   // Backbone.View with common helper methods.
-  base.App = Backbone.View.extend(
-  _.extend({}, utilMixins.Core, viewMixins.Destructor, helpers));
+  module.App = Backbone.View.extend(
+  _.extend({}, viewMixins.Destructor, helpers));
 
-  return base.App;
+  return module.App;
 }(this));

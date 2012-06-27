@@ -1,35 +1,39 @@
 /**
- * geolocation.js - HTML5 geo location api.
+ * geolocation.js - HTML5 geolocation api.
  *
  * requires: jQuery.
  */
 
-
-/**
- * Immediate function for initializing mvc mixins module.
- *
- * @param {window} global window object.
- * @param {Object} options option parameters.
- */
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace
    */
   var rootNs = global.getRootNamespace();
-  var mixins = rootNs.namespace('mixins.api');
+  var module = rootNs.namespace('mixins.api');
 
   /**
-   * Geo location api with jQuery deferred.
+   * Geolocation api with jQuery deferred.
    */
-  mixins.GeoLocation = {
+  module.GeoLocation = {
     getCurrentPositionDeferred: function(options) {
       var deferred = $.Deferred();
-      navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject, options);
+      navigator.geolocation.getCurrentPosition(
+        deferred.resolve, deferred.reject, options);
       return deferred.promise();
+    },
+    watchPositionDeferred: function(options) {
+      var deferred = $.Deferred();
+      this.geoWatchId = navigator.geolocation.watchPosition(
+          deferred.resolve, deferred.reject, options);
+      return deferred.promise();
+    },
+    clearWatch: function() {
+      var id = this.watchId;
+      id && navigator.geolocation.clearWatch(id);
     }
   };
 
-  return mixins.GeoLocation;
+  return module.GeoLocation;
 }(this));

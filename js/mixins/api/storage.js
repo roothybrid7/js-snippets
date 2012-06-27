@@ -11,12 +11,12 @@
    * namespace
    */
   var rootNs = global.getRootNamespace();
-  var mixins = rootNs.namespace('mixins.api');
+  var module = rootNs.namespace('mixins.api');
 
   /**
    * Storage api.
    */
-  mixins.Storage = {
+  module.Storage = {
     /**
      * set value to cookie.
      *
@@ -69,5 +69,5 @@
     }
   };
 
-  return mixins.Storage;
+  return module.Storage;
 }(this));

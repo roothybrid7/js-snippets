@@ -5,17 +5,19 @@
  * requires: jQuery, Backbone, _(underscore.js).
  */
 
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace.
    */
   var rootNs = global.getRootNamespace();
-  var base = rootNs.namespace('base.views');
+  var module = rootNs.namespace('mvc.base.views');
+
+  var constants = rootNs.Constants.getInstance();
 
   // HTML5 Audio API view model.
-  base.Audio = base.App.extend({
+  module.Audio = module.App.extend({
     audioReady: false,
     canAudioReady: function() {
       return this.audioReady;
@@ -26,18 +28,20 @@
     playAudioBuffer: [],
     unregisterEvents: function() {
       $(this.audio).off();
-      this.off();
-      this.undelegateEvents();
+      module.App.prototype.unregisterEvents.apply(this, arguments);
+      return this;
     },
-    // Should be override.
-    initializerList: [],
-    initBase: function() {
+    initialize: function() {
       _.bindAll(this);
       this.audio = new Audio();
     },
-    initialize: function() {
-      this.initBase();
-      this.executeCommands(this.initializerList);
+    bindOriginalEvents: function(events, callback) {
+      this.audio && $(this.audio).on(events, callback);
+      return this;
+    },
+    unbindOriginalEvents: function(events) {
+      this.audio && $(this.audio).off(events);
+      return this;
     },
     create: function(urlString) {
       // Remove old audio events.
@@ -46,14 +50,24 @@
 
       // Creates new audio.
       this.audio = new Audio(urlString);
+      this.timeoutId = setTimeout(this.timeoutAudio, constants.AUDIO_TIMEOUT);
+
       $(this.audio)
         .on('canplaythrough', this.canPlayReady)
         .on('ended', this.end)
-        .on('abort error', this.error);
+        .on('abort error', this.error)
+        .on('play', this.onPlayStart);
+    },
+    onPlayStart: function(e) {
+      this.trigger('playstart', e);
+    },
+    timeoutAudio: function(e) {
+      this.error(e);
     },
     canPlayReady: function(e) {
       console && console.log('Audio#canPlayReady');
       this.setAudioReady(true);
+      clearTimeout(this.timeoutId);
       var fn = this.playAudioBuffer.shift();
       fn && fn();
     },
@@ -78,6 +92,7 @@
     },
     stop: function() {
       this.pause();
+      this.audio && $(this.audio).off();
       this.setAudioReady(false);
     },
     end: function(e) {
@@ -87,7 +102,10 @@
     },
     error: function(e) {
       this.stop();
+      clearTimeout(this.timeoutId);
       this.trigger('error', e);
     }
   });
+
+  return module.Audio;
 }(this));

@@ -4,21 +4,21 @@
  * requires: Backbone, _.
  */
 
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace.
    */
   var rootNs = global.getRootNamespace();
-  var base = rootNs.namespace('base.models');
+  var module = rootNs.namespace('mvc.base.models');
 
-  base.Audio = base.App.extend({
+  module.Audio = module.App.extend({
     // Should be override.
     getAudioUrl: function(message) {
       return message;
     }
   });
 
-  return base.Audio;
+  return module.Audio;
 }(this));

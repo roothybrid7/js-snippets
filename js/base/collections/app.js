@@ -4,22 +4,22 @@
  * requires: jQuery, Backbone, _.
  */
 
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace.
    */
   var rootNs = global.getRootNamespace();
-  var base = rootNs.namespace('base.collections');
+  var module = rootNs.namespace('mvc.base.collections');
 
   // Backbone.Collection for application.
-  base.App = Backbone.Collection.extend({
+  module.App = Backbone.Collection.extend({
     initialize: function() {
     },
-//    collection.on('reset change', collection.resetForCollection, collection);
-    resetForCollection: function() {
+    resetWithCurrentItem: function(items) {
       this.currentItem = null;
+      this.reset(items);
     },
     onReset: function() {
     },
@@ -33,6 +33,8 @@
         item = this.getByCid(options.cid);
       } else if ('index' in options) {
         item = this.at(options.index);
+      } else if ('id' in options) {
+        item = this.get(options.id);
       }
       if (item) {
         this.currentItem = item;
@@ -42,5 +44,5 @@
     }
   });
 
-  return base.App;
+  return module.App;
 }(this));

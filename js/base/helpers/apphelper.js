@@ -1,32 +1,94 @@
 /**
  * apphelper.js - Application mvc helper utlities.
  *
- * requires: jQuery, Backbone, _(underscore.js)
+ * requires: underscore.js.
  */
 
-/**
- * Immediate function for Initializing mvc helper module.
- *
- * @param {window} global window object.
- * @param {Object} options option parameters.
- */
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace
    */
   var rootNs = global.getRootNamespace();
-  var helpers = rootNs.namespace('base.helpers');
+  var module = rootNs.namespace('mvc.helpers');
+
+  /**
+   * dump object.
+   *
+   * Example:
+   *  console.log(module.objDump({a:1}));
+   *  > "{
+   *      "a": 1
+   *    }"
+   *
+   * @param {*} object A source object.
+   * @return {string} A JSON.stringified object.
+   */
+  module.objDump = function(object) {
+    return JSON.stringify(object, null, 2);
+  };
 
   /**
    * Returns string with replacing nl to br.
    *
+   * Example:
+   *  var str = 'title\nbody';
+   *  $('#content').html(module.nl2br(str));
+   *  > <div id="content">
+   *      title<br/>body
+   *    </div>
+   *
    * @param {string} string string.
    * @return {string} converted string.
    */
-  helpers.nl2br = function(string) {
-    return string && string.replace(/\r\n|\r|\n/, '</br>') || '';
+  module.nl2br = function(string) {
+    return string && string.replace(/\r\n|\r|\n/g, '<br/>') || '';
+  };
+
+  /**
+   * Simple format.
+   *
+   * Example:
+   *  var text = 'Title\nBody.',
+   *      attrs = {class: 'text'};
+   *  $('#content').append(module.simpleFormat(text, attrs);
+   *  > <div id="content'>
+   *      <p class="text">Title<br/>Body.</p>
+   *    </div>
+   *
+   * @param {string} text A text string of <p> tag.
+   * @param {Object} options A <p> tag attributes.
+   * @return {string} <p> html string..
+   */
+  module.simpleFormat = function(text, options) {
+    var opts = (typeof options === 'object') ? options : {},
+        attrs = module.compactObject(opts, [0]),
+        html = module.nl2br(text);
+    return $(document.createElement('p')).attr(attrs).html(html).get(0);
+  };
+
+  /**
+   * Format message.
+   *
+   * Example:
+   *  var text = 'this is the test';
+   *  module.formatMessage(text);
+   *  > this is the test.
+   *  var text2 = 'Who are you?';
+   *  module.formatMessage(text2);
+   *  > Who are you?
+   *  var text3 = 'Great!!';
+   *  module.formatMessage(text3);
+   *  > Great!!
+   *
+   * @param {string} message A message string.
+   * @return {string} A formatted message string.
+   */
+  module.formatMessage = function(message) {
+    var msg = message;
+    msg += (message && !!!message.slice(-1).match(/(\.|!|\?)$/)) ? '.' : '';
+    return msg;
   };
 
   /**
@@ -36,13 +98,13 @@
    * @param {Array} options Leave falsy value(false, 0, '').
    * @return {Object} compacted object.
    */
-  helpers.compactObject = function(object, options) {
-    var origObject = _.clone(object);
-    options = options || [];
+  module.compactObject = function(object, options) {
+    var origObject = _.clone(object),
+        opts = options || [];
 
     _.chain(origObject).clone().each(function(value, key) {
 
-      if (!!!value && !!!_.include(options, value)) {
+      if (!!!value && !!!_.include(opts, value)) {
         delete origObject[key];
       }
     });
@@ -57,7 +119,7 @@
    * @param {number} digits Number of digits.
    * @return {string} Converted zero padding number.
    */
-  helpers.zeroPadding = function(number, digits) {
+  module.zeroPadding = function(number, digits) {
     var padding = '', i = 0, l = 0;
     for (i = 0, l = digits - 1; i < l; i++) {
       padding += '0';
@@ -72,7 +134,7 @@
    * @param {string} addStr A concat add string.
    * @return {?Object} Concated object.
    */
-  helpers.concatStrings = function(srcStr, addStr) {
+  module.concatStrings = function(srcStr, addStr) {
     if (!!!srcStr) {
       return '';
     }
@@ -88,7 +150,7 @@
    * @param {string} defaults Returns the string default value.
    * @return {string} the joined string or defaults string.
    */
-  helpers.joinStrings = function(list, condition, defaults) {
+  module.joinStrings = function(list, condition, defaults) {
     var str = '';
     if (condition) {
       str = list.join('');
@@ -99,35 +161,13 @@
   };
 
   /**
-   * Create paragraph in model for keys.
-   *
-   * @param {Object} model A backbone model.
-   * @param {Array.<string>} keys A backbone model keys.
-   * @param {string=} defaults A default paragraph.
-   * @return {string} Created paragraph.
-   */
-  helpers.createParagraphInModelForKeys = function(model, keys, defaults) {
-    var paragraph = '', strArr = [];
-    _.each(keys, function(key) {
-      strArr.push(model.get(key));
-    });
-    strArr = _.compact(strArr);
-    if (strArr.length === 0) {
-      paragraph = defaults + '.';
-    } else {
-      paragraph = strArr.join('. ') + '.';
-    }
-    return paragraph;
-  };
-
-  /**
    * Create paragraph in array.
    *
-   * @param {Array.<string>} model A backbone model.
+   * @param {Array.<string>} array A string of array.
    * @param {string=} defaults A default paragraph.
    * @return {string} Created paragraph.
    */
-  helpers.createParagraphInArray = function(array, defaults) {
+  module.createParagraphInArray = function(array, defaults) {
     var paragraph = '', strArr = [];
     _.each(array, function(item) {
       strArr.push(item);
@@ -147,7 +187,7 @@
    * @param {string} url url string.
    * @return {?string} pathname.
    */
-  helpers.getPathname = function(url) {
+  module.getPathname = function(url) {
     var pathname = null;
     if (url) {
       var a = document.createElement('a');
@@ -164,7 +204,7 @@
    * @param {Object=} options Option parameters.
    * @return {string} A truncated string.
    */
-  helpers.truncateString = function(string, options) {
+  module.truncateString = function(string, options) {
     var result = '';
     options = options || {};
     if (options.length > 3 && string.length > options.length) {
@@ -182,7 +222,7 @@
    * @param {(number|string)} timestamp Unix timestamp.
    * @return {Date} A creted date object.
    */
-  helpers.getDateFromTimestamp = function(timestamp) {
+  module.getDateFromTimestamp = function(timestamp) {
     var date = new Date();
     timestamp += '';
     if (timestamp.length === 10) {
@@ -200,9 +240,9 @@
    * @param {string} formatString A date format string.
    * @param {Date} date A date object.
    * @return {string} A formatted date string.
-   * requires: dateformat.js
+   * @see requires dateformat.js
    */
-  helpers.strftime = function(formatString, date) {
+  module.strftime = function(formatString, date) {
     var fmt = new DateFormat(formatString);
     var tmp = fmt.format(date);
     return fmt.format(date);
@@ -214,12 +254,62 @@
    * @param {string} formatString A date format string.
    * @param {string} dateString A date string.
    * @return {Date} A parsed date object.
-   * requires: dateformat.js
+   * @see requires dateformat.js
    */
-  helpers.dateParse = function(formatString, dateString) {
+  module.dateParse = function(formatString, dateString) {
     var fmt = new DateFormat(formatString);
     return fmt.parse(dateString);
   };
 
-  return helpers;
+  /**
+   * Capitalize string.
+   *
+   * @param {string} string A source string.
+   * @return {string} A capitalized string.
+   */
+  module.capitalize = function(string) {
+    return string.slice(0, 1).toUpperCase() + string.slice(1);
+  };
+
+  /**
+   * Creates and returns uri basename.
+   *
+   * Example:
+   *
+   * <pre>
+   * module.basename('/foo/bar.txt') // 'bar.txt'
+   * module.basename('/foo/bar.html', 'html') // 'bar'
+   * module.basename('http://a.com/foo/bar') // 'bar'
+   * module.basename('/') // ''
+   * </pre>
+   *
+   * @param {string} path URL OR filepath.
+   * @param {string=} suffix suffix string(html, js).
+   * @return {?string} url OR path basename.
+   * @see require: _(underscore.js).
+   */
+  module.basename = function(path, suffix) {
+    var base = '';
+    if (path === '.' || path === '/') {
+      base = path;
+    } else {
+      var entries = path && path.split('/');
+      while (entries.length) {
+        if ((base = entries.pop())) {
+          break;
+        }
+      }
+    }
+
+    if (typeof suffix === 'string' && suffix.length > 0) {
+      base = base.replace('.' + suffix, '');
+    }
+    return base;
+  };
+
+  module.dirname = function(path) {
+    return path.replace(/\/[^\/]*$/, '');
+  };
+
+  return module;
 }(this));

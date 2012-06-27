@@ -1,28 +1,27 @@
 /**
  * views.js - Javascript mvc framework extends functions.
  *
- * requires: jQuery, Backbone, _(underscore.js).
+ * @see requires jQuery, Backbone, _(underscore.js)
  */
 
 /**
  * Immediate function for initializing mvc mixins module.
  *
  * @param {window} global window object.
- * @param {Object} options option parameters.
  */
-(function(global, options) {
+(function(global) {
   'use strict';
 
   /**
    * namespace
    */
   var rootNs = global.getRootNamespace();
-  var mixins = rootNs.namespace('mixins.mvc.views');
+  var module = rootNs.namespace('mixins.mvc.views');
 
   /**
    * A view destruct method.
    */
-  mixins.Destructor = {
+  module.Destructor = {
     // Should be override.
     destruct: function() {
       this.unregisterEvents();
@@ -31,13 +30,14 @@
     unregisterEvents: function() {
       this.off();
       this.undelegateEvents();
+      return this;
     }
   };
 
   /**
    * A view control state by css class name.
    */
-  mixins.CssState = {
+  module.CssState = {
     __isReady: function() {
       return this.setReady;
     },
@@ -63,29 +63,32 @@
       this.__setInitState();
       return $(this.el).is('.' + this.controlStateCss.enabled);
     },
-    setControl: function(flag) {
+    setControl: function(flag, options) {
+      options = options || {};
       this.__setInitState();
       var state = this.controlStateCss;
+      var ev = null;
       if (flag) {
         $(this.el).removeClass(state.disabled);
         $(this.el).addClass(state.enabled);
-        this.trigger('enabled');
+        ev = 'enabled';
       } else {
         $(this.el).removeClass(state.enabled);
         $(this.el).addClass(state.disabled);
-        this.trigger('disabled');
+        ev = 'disabled';
       }
+      options.silent || this.trigger(ev);
     }
   };
 
   /**
    * Button control extension.
    */
-  mixins.ButtonState = _.extend({}, mixins.CssState, {
+  module.ButtonState = _.extend({}, module.CssState, {
     setStatusClass: function(options) {
       options = options || {};
       options.enabled = options.enabled || 'tap';
-      options.disabled = options.disabled || 'notap';
+      options.disabled = options.disabled || 'btn-notap';
       this.__setStatusClassBase(options);
     }
   });
@@ -93,15 +96,15 @@
   /**
    * Switch/Checkbox control extension.
    */
-  mixins.Switch = _.extend({}, mixins.CssState, {
+  module.Switch = _.extend({}, module.CssState, {
     toggle: function(e) {
       this.__setInitState();
       e && e.preventDefault();
       if ($(this.el).is('.' + this.controlStateCss.enabled)) {
-        this.setControl(false);
+        this.setControl(false, {silent: true});
         this.trigger('off', e);
       } else {
-        this.setControl(true);
+        this.setControl(true, {silent: true});
         this.trigger('on', e);
       }
       return false;
@@ -111,14 +114,14 @@
   /**
    * Checkbox control extension.
    */
-  mixins.CheckBox = _.extend({}, mixins.Switch, {
+  module.CheckBox = _.extend({}, module.Switch, {
     setStatusClass: function(options) {
       options = options || {};
       options.enabled = options.enabled || 'check-on';
-      options.disabled = options.disabled || 'check-off';
+      options.disabled = options.disabled || 'check';
       this.__setStatusClassBase(options);
     }
   });
 
-  return mixins;
+  return module;
 }(this));
